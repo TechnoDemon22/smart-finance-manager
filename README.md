@@ -1,86 +1,178 @@
-💰 Smart Finance Manager
-Your personal money tracker that actually helps you save! 🚀
+# Smart Finance Manager Desktop Application
 
-🎯 What Is It?
-Smart Finance Manager is a sleek, offline-first desktop app that tracks every rupee you spend, shows you exactly where your money's going, and gives you smart tips to save more. Built as a single .exe file—just double-click and you're in! No Python, no Node.js, no hassle. 🎉
+A full-featured, self-contained Windows desktop application for personal expense tracking, category budgeting, algorithmic spending analytics, and cash flow forecasting.
 
-✨ Features That Rock
-📊 Track Your Spending
-Log expenses in seconds with amount, category, date, and notes 💸
+Built with **Python (Flask + Waitress + SQLite + Pandas)**, **React 18 (Tailwind CSS + Recharts)**, and packaged in an **Electron** desktop wrapper into a single standalone installer.
 
-Auto-categorize into Food 🍕, Transport 🚕, Entertainment 🎮, Shopping 🛍️, Bills 📱, Healthcare 🏥, Education 📚, and more
+---
 
-Set up recurring expenses (Netflix, rent, gym) and forget about manual entry 🔁
+## Key Features
 
-📈 Visual Analytics
-Pie charts showing your spending breakdown by category 🥧
+### 1. Expense Management
+- **Full CRUD Operations**: Add, view, edit, and delete transactions.
+- **Search & Deep Filtering**: Filter by date range, category, payment method (Credit Card, Debit Card, Cash, UPI, Bank Transfer), amount ranges, or description keyword.
+- **Sorting & Bulk Actions**: Sort ascending/descending by date or amount, multi-select rows for bulk deletion.
+- **Recurring Commitments**: Track recurring expenses (daily, weekly, monthly) such as subscriptions and utilities.
 
-Bar graphs comparing month-over-month trends 📊
+### 2. Analytics Dashboard
+- **Category Spending Breakdown**: Interactive pie chart displaying proportional spending across all categories.
+- **6-Month Historical Trends**: Monthly comparison bar chart with total volume and transaction count.
+- **Daily Spending Trajectory**: 30-day continuous spending curve.
+- **Top Merchants & Vendors**: Dynamic leaderboard of top recipients and recurring subscriptions.
+- **Category-wise Monthly Breakdown Table**: Tabular view with utilization percentages and budgets.
 
-Line charts tracking daily/weekly spending patterns 📉
+### 3. Budget Management
+- **Monthly Spending Limits**: Set per-category budget limits with real-time utilization calculation.
+- **Multi-Tier Visual Alerts**:
+  - `On Track` (< 80% used)
+  - `Near Limit` (80% - 100% used)
+  - `Over Budget` (100% - 120% used)
+  - `Critical Overrun` (> 120% used)
+- **Auto Carry-Forward**: Option to carry forward unused budget surpluses to subsequent months.
 
-See your top merchants at a glance 🏪
+### 4. Smart Insights & Predictive Engine
+- **Weekday vs. Weekend Spending Split**: Quantitative breakdown of discretionary weekend spend versus weekday routine spend.
+- **Day-of-Week Distribution**: Cumulative spending analysis by day with automatic detection of peak spending days.
+- **Cash Flow Forecast**: Algorithmic month-end expenditure forecast using daily velocity against planned targets.
+- **Statistical Outlier Detection**: Automatic flagging of anomalous transactions exceeding 1.5× IQR / standard deviation.
+- **Personalized Recommendations**: Dynamic saving tips based on subscriptions, weekend habits, and budget trajectories.
 
-🎯 Budget Like a Pro
-Set monthly limits for each category 💪
+### 5. Data & Database Management
+- **Local Offline SQLite Storage**: Stores all financial records locally in `%APPDATA%\SmartFinanceManager\finance.db`.
+- **Zero Internet Requirement**: 100% private and offline.
+- **Export Formats**:
+  - One-click CSV export of all transactions.
+  - Multi-sheet Excel workbook (`.xlsx`) containing detailed expenses and category budgets.
+- **Smart CSV Import**: Intelligent bank statement import with flexible column header mapping (Date, Amount, Category, Description).
+- **Snapshot Backup & Restore**: One-click database backups to `%APPDATA%\SmartFinanceManager\backups\` with one-click restoration.
 
-Watch colorful progress bars fill up as you spend ⚡
+---
 
-Get friendly alerts at 80%, 100%, and 120% of your budget 🚨
+## Technical Architecture
 
-Optional: carry forward unused budget to next month 💚
+```
+smart-finance-manager/
+├── backend/
+│   ├── app.py                 # Flask app factory, Waitress server, dynamic port & paths
+│   ├── models.py              # SQLAlchemy ORM models (Expense, Budget, Category)
+│   ├── routes.py              # REST API endpoints (CRUD, analytics, export, import, backup)
+│   ├── analytics.py           # Pandas & NumPy analysis, forecasting & outlier detection
+│   ├── requirements.txt       # Python dependencies
+│   ├── SmartFinanceBackend.spec # PyInstaller specification
+│   └── test_api.py            # Automated unit & integration test suite
+├── frontend/
+│   ├── src/
+│   │   ├── components/        # CategoryIcon, ExpenseModal, ImportModal, Header, Sidebar
+│   │   ├── pages/             # Dashboard, Expenses, Budgets, Insights, Settings
+│   │   ├── utils/             # API client, dynamic port connector, service layer
+│   │   ├── App.jsx            # HashRouter, dark/light theme state, modal controller
+│   │   ├── main.jsx           # React DOM root entrypoint
+│   │   └── index.css          # Custom glassmorphism styles & Tailwind directives
+│   ├── package.json
+│   ├── tailwind.config.js
+│   └── vite.config.js         # Configured with base: './' for Electron file:// protocol
+├── electron/
+│   ├── main.js                # Electron main process (spawns backend, health check, window)
+│   ├── preload.js             # Context bridge exposing backend port & platform flags
+│   ├── assets/                # App icons (icon.ico, icon.png)
+│   └── package.json           # electron-builder packaging configuration
+├── scripts/
+│   ├── build-backend.bat      # Compiles backend into standalone SmartFinanceBackend.exe
+│   ├── build-electron.bat     # Builds React frontend and packages Windows installer
+│   ├── build-all.bat          # Master end-to-end build script
+│   └── dev.bat                # Concurrent development server launcher
+└── README.md
+```
 
-🧠 AI-Powered Insights
-Discover if you spend more on weekends vs weekdays 📅
+---
 
-Spot unusual expenses that don't fit your pattern 🔍
+## Development Setup
 
-Get personalized saving recommendations based on your habits 💡
+### Prerequisites
+- **Python 3.10+**: Ensure Python is in your system PATH.
+- **Node.js 18+ & npm**: For building the frontend and running Electron.
 
-Forecast your month-end balance so no surprises! 🔮
+### Install Dependencies
 
-🔒 Privacy First
-All data stored locally in SQLite—zero internet required 🌐❌
+1. **Backend**:
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
 
-Export to CSV/Excel anytime 📤
+2. **Frontend**:
+   ```bash
+   cd frontend
+   npm install
+   ```
 
-Import bank statements for quick bulk entry 📥
+3. **Electron**:
+   ```bash
+   cd electron
+   npm install
+   ```
 
-Your money data stays on your machine, period 🔐
+### Running in Development Mode
+Execute `scripts\dev.bat` or run each server manually:
+- Backend:
+  ```bash
+  cd backend
+  python app.py --dev --port 5500
+  ```
+- Frontend:
+  ```bash
+  cd frontend
+  npm run dev
+  ```
 
-🛠️ Built With Love
-Layer	Tech
-🐍 Backend	Python + Flask + SQLAlchemy
-⚛️ Frontend	React 18 + Vite + Recharts + Tailwind CSS
-🖥️ Desktop	Electron (single .exe magic)
-💾 Database	SQLite (local, zero-config)
-📦 Packaging	PyInstaller + electron-builder
-🎁 Why You'll Love It
-✅ One-click install — feels like any native Windows app
-✅ 100% offline — no cloud, no tracking, no subscriptions
-✅ Beautiful UI — dark/light mode, smooth animations, modern design 🌙☀️
-✅ Smart alerts — never overspend without knowing
-✅ CSV import/export — works with your bank statements
-✅ Lightweight — runs on any Windows 10/11 PC
-✅ Free forever — built for students, by students 🎓
+---
 
-🎯 Perfect For
-🇮🇳 Indian engineering students managing pocket money or stipends
+## Building the Windows Executable (.exe)
 
-💼 Young professionals budgeting their first salary
+### Step 1: Build the Backend Executable
+Run the backend build script:
+```cmd
+scripts\build-backend.bat
+```
+This runs PyInstaller and outputs `backend\dist\SmartFinanceBackend.exe`.
 
-🎮 Gamers tracking spending on games, subscriptions, and gear
+### Step 2: Build the Frontend
+```cmd
+cd frontend
+npm run build
+```
+This produces the static files in `frontend\dist\`.
 
-📱 Anyone who wants financial clarity without giving up privacy
+### Step 3: Package with Electron Builder
+Run the electron packaging script:
+```cmd
+scripts\build-electron.bat
+```
+Output:
+- NSIS Setup Installer: `electron\dist\Smart Finance Manager-Setup-1.0.0.exe`
+- Portable Executable: `electron\dist\Smart Finance Manager-1.0.0.exe`
 
-🚀 Quick Start
-bash
-# After building (or download the .exe)
-SmartFinanceManager-Setup.exe
-→ Install → Launch → Start tracking! 💪
-No setup. No config. Just open and go. ⚡
+Or run `scripts\build-all.bat` to execute all steps with a single click.
 
-💬 Bottom Line
-Whether you're grinding through exams on a tight budget or managing your first job's income, Smart Finance Manager gives you the tools to spend smarter, save more, and stress less about money. 🎯💚
+---
 
-Your money. Your data. Your control. 🔐✨
+## Running Automated Tests
+
+Run the Python backend test suite:
+```cmd
+cd backend
+python -m unittest test_api.py
+```
+
+Test results verify:
+- Health check endpoint `/api/health`
+- Seeded categories & custom category creation
+- Expense CRUD operations
+- Category budget retrieval & progress tracking
+- Summary analytics and time-series trends
+- CSV database export & backup creation
+
+---
+
+## License
+MIT License. Built for personal financial tracking and wealth management.

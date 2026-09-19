@@ -1,0 +1,66 @@
+{
+  "name": "smart-finance-manager",
+  "productName": "Smart Finance Manager",
+  "version": "1.0.0",
+  "description": "Smart Finance Manager Desktop Application - Offline Personal Expense & Budget Tracking",
+  "main": "main.js",
+  "author": "Smart Finance Team",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win nsis",
+    "dist:portable": "electron-builder --win portable",
+    "dist:all": "electron-builder --win nsis portable"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "wait-on": "^8.0.2"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.smartfinance.manager",
+    "productName": "Smart Finance Manager",
+    "artifactName": "${productName}-Setup-${version}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "assets/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend/dist/SmartFinanceBackend.exe",
+        "to": "backend/SmartFinanceBackend.exe"
+      },
+      {
+        "from": "../frontend/dist",
+        "to": "frontend"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.ico",
+      "signAndEditExecutable": false,
+      "forceCodeSigning": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Smart Finance Manager",
+      "uninstallDisplayName": "Smart Finance Manager"
+    }
+  }
+}
